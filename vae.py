@@ -241,10 +241,10 @@ class DotDict(dict):
     __setattr__ = dict.__setitem__
 
 class TAEHVDiffusersWrapper(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, path):
         super().__init__()
         self.dtype = torch.float16
-        self.taehv = TAEHV(checkpoint_path="/mnt/data0/lab408/linruichen/Self-Forcing/checkpoints/taew2_1.pth", decoder_time_upscale=(True, True), decoder_space_upscale=(True, True, True)).to(self.dtype)
+        self.taehv = TAEHV(checkpoint_path=path, decoder_time_upscale=(True, True), decoder_space_upscale=(True, True, True)).to(self.dtype)
         self.config = DotDict(scaling_factor=1.0)
 
     def encode_to_latent(self, image):

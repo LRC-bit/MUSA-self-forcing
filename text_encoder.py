@@ -5,7 +5,7 @@ from wan.modules.tokenizers import HuggingfaceTokenizer
 from wan.modules.t5 import umt5_xxl
 
 class WanTextEncoder(torch.nn.Module):
-    def __init__(self) -> None:
+    def __init__(self, text_encoder_path, tokenizer_path) -> None:
         super().__init__()
 
         self.text_encoder = umt5_xxl(
@@ -15,12 +15,10 @@ class WanTextEncoder(torch.nn.Module):
             device=torch.device('cpu')
         ).eval().requires_grad_(False)
         self.text_encoder.load_state_dict(
-            torch.load("/mnt/data0/lab408/linruichen/Self-Forcing/Wan2.1-T2V-1.3B/models_t5_umt5-xxl-enc-bf16.pth",
-                       map_location='cpu', weights_only=False)
-        )
+            torch.load(text_encoder_path, map_location='cpu', weights_only=False))
 
         self.tokenizer = HuggingfaceTokenizer(
-            name="/mnt/data0/lab408/linruichen/Self-Forcing/Wan2.1-T2V-1.3B/google/umt5-xxl/", seq_len=512, clean='whitespace')
+            name=tokenizer_path, seq_len=512, clean='whitespace')
 
     @property
     def device(self):
